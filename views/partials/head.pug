@@ -1,0 +1,7 @@
+//- use the title only if it exists, i.e. not for index page
+
+- const composedTitle = `${company}${page ? ` | ${page}` : ''}`
+
+title= composedTitle
+
+include styles.pug

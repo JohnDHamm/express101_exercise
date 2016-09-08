@@ -1,0 +1,32 @@
+body {
+	background-color: rgb(200, 0, 50);
+	padding-top: 50px;
+}
+
+.container {
+	text-align: center;
+	color: white;
+}
+
+h1 {
+	text-shadow: #000 3px 3px 0;
+}
+
+img {
+	width: 75%;
+}
+
+a {
+	text-decoration: none;
+	color: white;
+}
+
+.aboutText {
+	padding: 10px;
+	font-size: 2rem;
+	font-style: italic;
+}
+
+.contactForm {
+	text-align: left;
+}
