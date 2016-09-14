@@ -2,7 +2,8 @@
 
 const { Router } = require('express');
 const router = Router();
-const { db } = require('../database');
+// const { db } = require('../database');
+const Contact = require('../models/contact');
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -16,12 +17,22 @@ router.get('/contact', (req, res) => {
 	res.render('contact', {page: 'Contact'})
 })
 
+// const mongoose = require('mongoose');
+// const Contact = mongoose.model('Contact');
+
+
 router.post('/contact', (req, res) => {
-	db().collection('contact')
-		.insertOne(req.body)
+	const msg = new Contact(req.body);
+	msg.save()
 		.then(() => res.redirect('/'))
 		.catch(() => res.send('BAD'));
-	console.log(req.body);
+
+
+	// db().collection('contact')
+	// 	.insertOne(req.body)
+	// 	.then(() => res.redirect('/'))
+	// 	.catch(() => res.send('BAD'));
+	// console.log(req.body);
 
 })
 

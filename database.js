@@ -1,10 +1,17 @@
 'use strict';
 
-const { MongoClient: { connect } } = require('mongodb')
+const mongoose = require('mongoose')
 const MONGODB_URL = 'mongodb://localhost:27017/pizzabypug'
 
-let db
+mongoose.Promise = Promise //tells mongoose to use global Promise vs. its' internal promise
 
-module.exports.connect = () => connect(MONGODB_URL).then(_db => db = _db);
+//every collection needs a model
+// mongoose.model('Contact', {
+// 	name: String,
+// 	email: String,
+// 	phone: String,
+// 	message: String
+// });
 
-module.exports.db = () => db;
+module.exports.connect = () => mongoose.connect(MONGODB_URL)
+
