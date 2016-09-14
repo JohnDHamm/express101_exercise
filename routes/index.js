@@ -4,6 +4,7 @@ const { Router } = require('express');
 const router = Router();
 // const { db } = require('../database');
 const Contact = require('../models/contact');
+const Order = require('../models/order');
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -15,6 +16,10 @@ router.get('/about', (req, res) => {
 
 router.get('/contact', (req, res) => {
 	res.render('contact', {page: 'Contact'})
+})
+
+router.get('/order', (req, res) => {
+	res.render('order', {page: 'Order'})
 })
 
 // const mongoose = require('mongoose');
@@ -34,6 +39,16 @@ router.post('/contact', (req, res) => {
 	// 	.catch(() => res.send('BAD'));
 	// console.log(req.body);
 
+})
+
+
+router.post('/order', (req, res) => {
+	// console.log(req.body);
+	// res.redirect('/');
+	const order = new Order(req.body);
+	order.save()
+		.then(() => res.redirect('/'))
+		.catch(() => res.send('BAD'));
 })
 
 module.exports = router;
