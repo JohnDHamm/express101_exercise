@@ -22,6 +22,17 @@ block content
 					option.disabled Select size
 					each size in sizes
 						option(value=size.inches) #{size.name}: #{size.inches}"
+			//- .form-group
+			//- 	label(for='toppings') Toppings
+			//- 	select.form-control#toppings(name="toppings" multiple)
+			//- 		each topping in toppings
+			//- 			option(value=topping.name)= topping.name
+			.checkbox
+				each topping in toppings
+					label.checkbox-inline
+						input(type="checkbox" name="toppings" value=topping.name)
+						| #{topping.name}
+
 			.order-form__submit
 				a.btn.btn-danger.btn-lg(href='/') Cancel
 				input.btn.btn-success.btn-lg(type='submit' value='Submit')
