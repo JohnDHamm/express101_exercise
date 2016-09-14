@@ -2,6 +2,7 @@
 
 const { Router } = require('express');
 const router = Router();
+const { db } = require('../database');
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -16,8 +17,12 @@ router.get('/contact', (req, res) => {
 })
 
 router.post('/contact', (req, res) => {
+	db().collection('contact')
+		.insertOne(req.body)
+		.then(() => res.redirect('/'))
+		.catch(() => res.send('BAD'));
 	console.log(req.body);
-	res.redirect('/');
+
 })
 
 module.exports = router;

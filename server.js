@@ -7,9 +7,12 @@ const routes = require('./routes/') //assumes index in routes dir
 const app = express(); //creates an instance of express server running - same as: new Express()
 const bodyParser = require('body-parser');
 
+const { connect } = require('./database');
+
 // get port from environment and store in Express - in cl: PORT=1337 node server.js to set 1337 as port
 const port = process.env.PORT || 3000 // 3000 is backup default port
 app.set('port', port)
+
 
 
 //view engine
@@ -44,15 +47,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(routes);
 
 
-
 // 404 catch and forward
-app.use((req, res) => {
+app.use((req, res) =>
 	// to throw error:
 	// const err = Error('Not Found');
 	// err.status = 404;
 	// next(err); //send err object to error handling middleware
-	res.render('404'); // or custom 404 page
-})
+	res.render('404') // or custom 404 page
+)
 
 
 // Error handling middlewares
@@ -65,14 +67,18 @@ app.use((err, { method, url, headers: { 'user-agent': agent } }, res, next) => {
 	const statusMessage = res.statusMessage
 
 	console.error(
-	  `[${timeStamp}] "${red(`${method} ${url}`)}" Error (${statusCode}): "${statusMessage}"`
+	  `[${timeStamp}] "${chalk.red(`${method} ${url}`)}" Error (${statusCode}): "${statusMessage}"`
 	)
 	console.error(err.stack)
 })
 
 
+connect()
+	.then(() => {
+		app.listen(port, () => {
+			console.log(`Express server listening on port: ${port}`);
+		});
+	})
+	.catch(console.error)
 
-app.listen(port, () => {
-	console.log(`Express server listening on port: ${port}`);
-});
 
