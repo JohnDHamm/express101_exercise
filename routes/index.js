@@ -5,6 +5,7 @@ const router = Router();
 // const { db } = require('../database');
 const Contact = require('../models/contact');
 const Order = require('../models/order');
+const Size = require('../models/size');
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -18,37 +19,27 @@ router.get('/contact', (req, res) => {
 	res.render('contact', {page: 'Contact'})
 })
 
-router.get('/order', (req, res) => {
-	res.render('order', {page: 'Order'})
-})
-
-// const mongoose = require('mongoose');
-// const Contact = mongoose.model('Contact');
-
-
-router.post('/contact', (req, res) => {
-	const msg = new Contact(req.body);
-	msg.save()
+router.post('/contact', (req, res, err) =>
+	Contact
+		.create(req.body)
 		.then(() => res.redirect('/'))
-		.catch(() => res.send('BAD'));
+		.catch(err)
+)
 
+router.get('/order', (req, res) =>
+	Size
+		.find()
+		.sort({inches: 1})
+		.then(sizes =>
+			res.render('order', { page: 'Order', sizes })
+		)
+)
 
-	// db().collection('contact')
-	// 	.insertOne(req.body)
-	// 	.then(() => res.redirect('/'))
-	// 	.catch(() => res.send('BAD'));
-	// console.log(req.body);
-
-})
-
-
-router.post('/order', (req, res) => {
-	// console.log(req.body);
-	// res.redirect('/');
-	const order = new Order(req.body);
-	order.save()
+router.post('/order', (req, res, err) =>
+	Order
+		.create(req.body)
 		.then(() => res.redirect('/'))
-		.catch(() => res.send('BAD'));
-})
+		.catch(err)
+)
 
 module.exports = router;
