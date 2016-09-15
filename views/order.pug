@@ -1,0 +1,46 @@
+extends partials/layout.pug
+
+block content
+	.orderForm
+		h1 Order a damn pie!
+		//- .image
+		//- 	img(src='/img/pizza2.jpg')
+
+		form(method='POST')
+			.form-group
+				label(for="exampleInputName1") Name
+				input(type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Name")
+			.form-group
+				label Email address
+				input(type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="you@internets.com")
+			.form-group
+				label Phone
+				input(type="tel" class="form-control" name="phone" id="exampleInputPhone1" placeholder="123-456-7890")
+			.form-group
+				label(for='size') Size
+				select.form-control#size(name="size")
+					option.disabled Select size
+					each size in sizes
+						option(value=size.inches) #{size.name}: #{size.inches}"
+			//- .form-group
+			//- 	label(for='toppings') Toppings
+			//- 	select.form-control#toppings(name="toppings" multiple)
+			//- 		each topping in toppings
+			//- 			option(value=topping.name)= topping.name
+			.form-group
+				label Toppings
+				.checkbox
+					each meat in meats
+						label.checkbox-inline
+							input(type="checkbox" name="toppings" value=meat.name)
+							| #{meat.name}
+				.checkbox
+					each veggie in veggies
+						label.checkbox-inline
+							input(type="checkbox" name="toppings" value=veggie.name)
+							| #{veggie.name}
+
+			.order-form__submit
+				a.btn.btn-danger.btn-lg(href='/') Cancel
+				input.btn.btn-success.btn-lg(type='submit' value='Submit')
+
