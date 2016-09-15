@@ -30,16 +30,21 @@ router.post('/contact', (req, res, err) =>
 router.get('/order', (req, res, err) => {
 	Promise.all([
 		Size.find().sort({inches: 1}),
-		Toppings.find().sort({name: 1})
-	]).then(([sizes, toppings]) => res.render('order', { page: 'Order', sizes, toppings }))
+		Toppings.find({type: "meat"}).sort({name: 1}),
+		Toppings.find({type: "veggie"}).sort({name: 1})
+	]).then(([sizes, meats, veggies]) => res.render('order', { page: 'Order', sizes, meats, veggies}))
 	.catch(err)
 })
 
 router.post('/order', (req, res, err) =>
 	Order
 		.create(req.body)
-		.then(() => res.redirect('/'))
+		.then(() => res.redirect('/thanks'))
 		.catch(err)
 )
+
+router.get('/thanks', (req, res) => {
+	res.render('thanks', {page: 'Thanks'})
+})
 
 module.exports = router;

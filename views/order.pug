@@ -27,11 +27,18 @@ block content
 			//- 	select.form-control#toppings(name="toppings" multiple)
 			//- 		each topping in toppings
 			//- 			option(value=topping.name)= topping.name
-			.checkbox
-				each topping in toppings
-					label.checkbox-inline
-						input(type="checkbox" name="toppings" value=topping.name)
-						| #{topping.name}
+			.form-group
+				label Toppings
+				.checkbox
+					each meat in meats
+						label.checkbox-inline
+							input(type="checkbox" name="toppings" value=meat.name)
+							| #{meat.name}
+				.checkbox
+					each veggie in veggies
+						label.checkbox-inline
+							input(type="checkbox" name="toppings" value=veggie.name)
+							| #{veggie.name}
 
 			.order-form__submit
 				a.btn.btn-danger.btn-lg(href='/') Cancel
