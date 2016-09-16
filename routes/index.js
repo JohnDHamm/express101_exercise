@@ -40,7 +40,7 @@ router.post('/order', (req, res, err) =>
 	Order
 		.create(req.body)
 		.then(() => res.redirect('/thanks'))
-		.catch(err)
+		// .catch(() => res.render('order', msg: 'Fix the form please!', sizes, meats, veggies)
 )
 
 router.get('/thanks', (req, res) => {

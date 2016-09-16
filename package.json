@@ -17,9 +17,11 @@
     "bower": "^1.7.9"
   },
   "scripts": {
+    "db:seed": "node db/dbseed.js",
+    "deploy": "git push heroku master",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "postinstall": "bower install"
+    "postinstall": "bower install && npm run db:seed"
   },
   "author": "",
   "license": "ISC"
