@@ -1,6 +1,8 @@
 extends partials/layout.pug
 
 block content
+	if msg
+		h2= msg
 	.orderForm
 		h1 Order a damn pie!
 		//- .image
@@ -9,13 +11,13 @@ block content
 		form(method='POST')
 			.form-group
 				label(for="exampleInputName1") Name
-				input(type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Name")
+				input(type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Name" required)
 			.form-group
 				label Email address
-				input(type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="you@internets.com")
+				input(type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="you@internets.com" required)
 			.form-group
 				label Phone
-				input(type="tel" class="form-control" name="phone" id="exampleInputPhone1" placeholder="123-456-7890")
+				input(type="tel" class="form-control" name="phone" id="exampleInputPhone1" placeholder="123-456-7890" required)
 			.form-group
 				label(for='size') Size
 				select.form-control#size(name="size")

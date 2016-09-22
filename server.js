@@ -7,7 +7,7 @@ const routes = require('./routes/') //assumes index in routes dir
 const app = express(); //creates an instance of express server running - same as: new Express()
 const bodyParser = require('body-parser');
 
-const { connect } = require('./database');
+const { connect } = require('./db/database');
 
 // get port from environment and store in Express - in cl: PORT=1337 node server.js to set 1337 as port
 const port = process.env.PORT || 3000 // 3000 is backup default port
