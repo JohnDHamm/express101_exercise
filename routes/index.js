@@ -1,15 +1,15 @@
 'use strict';
 
 const { Router } = require('express');
+const bcrypt = require('bcrypt')
+
 const router = Router();
-// const { db } = require('../database');
+
 const Contact = require('../models/contact');
 const Order = require('../models/order');
 const Size = require('../models/size');
 const Toppings = require('../models/toppings')
-
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -29,26 +29,6 @@ router.post('/contact', (req, res, err) =>
 		.then(() => res.redirect('/'))
 		.catch(err)
 )
-
-router.get('/order', (req, res, err) => {
-	Promise.all([
-		Size.find().sort({inches: 1}),
-		Toppings.find({type: "meat"}).sort({name: 1}),
-		Toppings.find({type: "veggie"}).sort({name: 1})
-	]).then(([sizes, meats, veggies]) => res.render('order', { page: 'Order', sizes, meats, veggies}))
-	.catch(err)
-})
-
-router.post('/order', (req, res, err) =>
-	Order
-		.create(req.body)
-		.then(() => res.redirect('/thanks'))
-		// .catch(() => res.render('order', msg: 'Fix the form please!', sizes, meats, veggies)
-)
-
-router.get('/thanks', (req, res) => {
-	res.render('thanks', {page: 'Thanks'})
-})
 
 router.get('/login', (req, res) =>
 	res.render('login', {page: 'Login'})
@@ -104,21 +84,11 @@ router.post('/register', ({ body: { email, password, confirmation } }, res, err)
 					})
 				}
 			})
-			.then(hash => {
-				User.create({ email, password: hash })
-			})
+			.then(hash => { User.create({ email, password: hash })})
 			.then(() => res.redirect('/login'))
 			.catch(err)
 	} else {
 		res.render('register', { msg: 'Password & password confirmation do not match' })
-	}
-})
-
-router.get('/logout', (req, res) => {
-	if (req.session.email) {
-		res.render('logout', { page: 'Logout'})
-	} else {
-		res.redirect('/login')
 	}
 })
 
@@ -127,6 +97,64 @@ router.post('/logout', (req, res) => {
 		if (err) throw err
 		res.redirect('/login')
 	})
+})
+
+// login guard middleware
+router.use((req, res, next) => {
+	if (req.session.email) {
+		next()
+	} else {
+		res.redirect('/login')
+	}
+})
+
+router.get('/order', (req, res, err) => {
+	Promise
+		.all([
+			Size.find().sort({inches: 1}),
+			Toppings.find({type: "meat"}).sort({name: 1}),
+			Toppings.find({type: "veggie"}).sort({name: 1})
+		]).then(([sizes, meats, veggies]) => res.render('order', { page: 'Order', sizes, meats, veggies}))
+	.catch(err)
+})
+
+router.post('/order', (req, res, err) =>
+	Order
+		.create(req.body)
+		.then(() => res.redirect('/thanks'))
+		.catch(({ errors })  =>
+			Promise.all([ // retrieve sizes and toppings again,
+				Promise.resolve(errors), // but pass the errors along as well
+				Size.find().sort({ inches: 1 }),
+				Toppings.find({type: "meat"}).sort({name: 1}),
+				Toppings.find({type: "veggie"}).sort({name: 1})
+			])
+		)
+		.then(([
+				errors,
+				sizes,
+				meats,
+				veggies
+			]) =>
+			// UI/UX additions
+			// send errors to renderer to change styling and add error messages
+			// also, send the req.body to use as initial form input values
+			res.render('order', { page: 'Order', sizes, meats, veggies, errors, body })
+		)
+		.catch(err)
+)
+
+router.get('/thanks', (req, res) => {
+	res.render('thanks', {page: 'Thanks'})
+})
+
+
+router.get('/logout', (req, res) => {
+	if (req.session.email) {
+		res.render('logout', { page: 'Logout'})
+	} else {
+		res.redirect('/login')
+	}
 })
 
 module.exports = router;
