@@ -6,6 +6,8 @@ const routes = require('./routes/') //assumes index in routes dir
 
 const app = express(); //creates an instance of express server running - same as: new Express()
 const bodyParser = require('body-parser');
+const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
 
 const { connect } = require('./db/database');
 
@@ -23,8 +25,20 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.locals.company = 'Pizza by Pug'; //used as global variable in head.pug
+app.locals.errors = {} // errors & body added to avoid guard statements
+app.locals.body = {} // i.e. value=(body && body.name) vs. value=body.name
 
 // middlewares
+app.use(session({
+	store: new RedisStore(),
+	secret: 'pizzabypugsupersecretkey'
+}))
+
+app.use((req, res, next) => {
+	app.locals.email = req.session.email
+	next()
+})
+
 app.use((req, res, next) => { //mimicking http output
 	let httpString = '';
 	let method = chalk.cyan(`${req.method}`)
@@ -40,8 +54,6 @@ app.use((req, res, next) => { //mimicking http output
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
-
-// app.set('views', 'templates'); //not needed if in views directory
 
 //routes
 app.use(routes);
@@ -67,7 +79,7 @@ app.use((err, { method, url, headers: { 'user-agent': agent } }, res, next) => {
 	const statusMessage = res.statusMessage
 
 	console.error(
-	  `[${timeStamp}] "${chalk.red(`${method} ${url}`)}" Error (${statusCode}): "${statusMessage}"`
+		`[${timeStamp}] "${chalk.red(`${method} ${url}`)}" Error (${statusCode}): "${statusMessage}"`
 	)
 	console.error(err.stack)
 })
