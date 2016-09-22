@@ -21,3 +21,10 @@ nav.navbar.navbar-inverse.navbar-fixed-top
 				li(class={ active: page === 'Order' })
 					//- li(class=`${page === 'Order' ? 'active' : ''}`)
 					a(href='/order') Order
+				if email
+					li: a(href='/logout') Logged in as #{email}
+				else
+					li(class={ active: page === 'Login' })
+						a(href='/login') Login
+					li(class={ active: page === 'Register' })
+						a(href='/register') Register

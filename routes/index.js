@@ -54,7 +54,7 @@ router.get('/login', (req, res) =>
 	res.render('login', {page: 'Login'})
 )
 
-router.post('/login', ({ body: { email, password } }, res, err) => {
+router.post('/login', ({ session, body: { email, password } }, res, err) => {
 	User.findOne({ email })
 		.then(user => {
 			if (user) {
@@ -73,6 +73,7 @@ router.post('/login', ({ body: { email, password } }, res, err) => {
 		})
 		.then((matches) => {
 			if (matches) {
+				session.email = email
 				res.redirect('/')
 			} else {
 				res.render('login', { msg: 'Password does not match' })
@@ -92,23 +93,40 @@ router.post('/register', ({ body: { email, password, confirmation } }, res, err)
 				if (user) {
 					res.render('register', { msg: 'Email is already registered' })
 				} else {
-         return new Promise((resolve, reject) => {
-            bcrypt.hash(password, 15, (err, hash) => {
-              if (err) {
-                reject(err)
-              } else {
-                resolve(hash)
-              }
-            })
-          })
-        }
-      })
-      .then(hash => User.create({ email, password: hash }))
-      .then(() => res.redirect('/login'), { msg: 'User created' })
-      .catch(err)
-  } else {
-    res.render('register', { msg: 'Password & password confirmation do not match' })
-  }
+				 return new Promise((resolve, reject) => {
+						bcrypt.hash(password, 15, (err, hash) => {
+							if (err) {
+								reject(err)
+							} else {
+								resolve(hash)
+							}
+						})
+					})
+				}
+			})
+			.then(hash => {
+				User.create({ email, password: hash })
+			})
+			.then(() => res.redirect('/login'))
+			.catch(err)
+	} else {
+		res.render('register', { msg: 'Password & password confirmation do not match' })
+	}
+})
+
+router.get('/logout', (req, res) => {
+	if (req.session.email) {
+		res.render('logout', { page: 'Logout'})
+	} else {
+		res.redirect('/login')
+	}
+})
+
+router.post('/logout', (req, res) => {
+	req.session.destroy(err => {
+		if (err) throw err
+		res.redirect('/login')
+	})
 })
 
 module.exports = router;
