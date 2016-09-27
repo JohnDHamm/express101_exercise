@@ -2,8 +2,8 @@
 
 const { connect, disconnect } = require('./database')
 
-const Size = require('./models/size')
-const Topping = require('./models/toppings')
+const Size = require('../models/size')
+const Topping = require('../models/toppings')
 
 connect()
 	.then(() => Size.remove())
