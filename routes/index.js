@@ -36,7 +36,8 @@ router.get('/login', (req, res) =>
 
 router.post('/login', ({ session, body: { email, password } }, res, err) => {
 	User.findOne({ email })
-		.then(user => {
+		.then((user) => {
+			console.log("user:", user);
 			if (user) {
 				return new Promise((resolve, reject) => {
 					bcrypt.compare(password, user.password, (err, matches) => {
@@ -47,19 +48,19 @@ router.post('/login', ({ session, body: { email, password } }, res, err) => {
 						}
 					})
 				})
+				.then((matches) => {
+					if (matches) {
+						session.email = email
+						res.redirect('/')
+					} else {
+						res.render('login', { msg: 'Password does not match', page: 'Login' })
+					}
+				})
+				.catch(err)
 			} else {
-				res.render('login', { msg: 'Email does not exist in our system' })
+				res.render('login', { msg: 'Email does not exist in our system', page: 'Login' })
 			}
 		})
-		.then((matches) => {
-			if (matches) {
-				session.email = email
-				res.redirect('/')
-			} else {
-				res.render('login', { msg: 'Password does not match' })
-			}
-		})
-		.catch(err)
 })
 
 router.get('/register', (req, res) =>
