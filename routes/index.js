@@ -5,11 +5,13 @@ const bcrypt = require('bcrypt')
 
 const router = Router();
 
-const Contact = require('../models/contact');
+// const Contact = require('../models/contact');
 const Order = require('../models/order');
 const Size = require('../models/size');
 const Toppings = require('../models/toppings')
 const User = require('../models/user')
+
+const contact = require('./contact');
 
 router.get('/', (req, res) => {
 	res.render('index')
@@ -19,16 +21,7 @@ router.get('/about', (req, res) => {
 	res.render('about', {page: 'About'})
 })
 
-router.get('/contact', (req, res) => {
-	res.render('contact', {page: 'Contact'})
-})
-
-router.post('/contact', (req, res, err) =>
-	Contact
-		.create(req.body)
-		.then(() => res.redirect('/'))
-		.catch(err)
-)
+router.use(contact);
 
 router.get('/login', (req, res) =>
 	res.render('login', {page: 'Login'})
