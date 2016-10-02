@@ -129,19 +129,19 @@ router.post('/order', (req, res, err) =>
 				Toppings.find({type: "meat"}).sort({name: 1}),
 				Toppings.find({type: "veggie"}).sort({name: 1})
 			])
+			.then(([
+					errors,
+					sizes,
+					meats,
+					veggies
+				]) =>
+				// UI/UX additions
+				// send errors to renderer to change styling and add error messages
+				// also, send the req.body to use as initial form input values
+				res.render('order', { page: 'Order', sizes, meats, veggies, errors, body })
+			)
+			.catch(err)
 		)
-		.then(([
-				errors,
-				sizes,
-				meats,
-				veggies
-			]) =>
-			// UI/UX additions
-			// send errors to renderer to change styling and add error messages
-			// also, send the req.body to use as initial form input values
-			res.render('order', { page: 'Order', sizes, meats, veggies, errors, body })
-		)
-		.catch(err)
 )
 
 router.get('/thanks', (req, res) => {
