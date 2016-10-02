@@ -37,6 +37,12 @@ connect()
 			name: 'Sausage',
 			type: 'meat'
 		}, {
+			name: 'Bacon',
+			type: 'meat'
+		}, {
+			name: 'Ham',
+			type: 'meat'
+		}, {
 			name: 'Mushrooms',
 			type: 'veggie'
 		}, {
@@ -44,6 +50,24 @@ connect()
 			type: 'veggie'
 		}, {
 			name: 'Onions',
+			type: 'veggie'
+		}, {
+			name: 'Banana Peppers',
+			type: 'veggie'
+		}, {
+			name: 'Black Olives',
+			type: 'veggie'
+		}, {
+			name: 'Green Olives',
+			type: 'veggie'
+		}, {
+			name: 'Jalapenos',
+			type: 'veggie'
+		}, {
+			name: 'Sundried Tomatoes',
+			type: 'veggie'
+		}, {
+			name: 'Pineapple',
 			type: 'veggie'
 		}])
 	)
