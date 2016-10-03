@@ -4,21 +4,12 @@ const { Router } = require('express');
 
 const router = Router();
 
-const about = require('./about');
-const contact = require('./contact');
-const login = require('./login');
-const logout = require('./logout');
-const order = require('./order');
-const thanks = require('./thanks');
-const register = require('./register');
-const root = require('./root');
-
 //public routes
-router.use(about);
-router.use(contact);
-router.use(login);
-router.use(register);
-router.use(root);
+router.use(require('./about'));
+router.use(require('./contact'));
+router.use(require('./login'));
+router.use(require('./register'));
+router.use(require('./root'));
 
 // login guard middleware
 router.use((req, res, next) => {
@@ -30,8 +21,8 @@ router.use((req, res, next) => {
 });
 
 //private routes
-router.use(logout);
-router.use(order);
-router.use(thanks);
+router.use(require('./logout'));
+router.use(require('./order'));
+router.use(require('./thanks'));
 
 module.exports = router;
